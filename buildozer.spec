@@ -16,7 +16,7 @@ fullscreen = 0
 
 android.api = 34
 android.minapi = 21
-android.sdk = 34
+
 android.build_tools_version = 34.0.0
 android.ndk = 25b
 
