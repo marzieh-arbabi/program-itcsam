@@ -6,8 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+
     env:
-      ANDROID_ACCEPT_LICENSES: "true"  
+      ANDROID_ACCEPT_LICENSES: "true"
 
     steps:
       - name: Checkout
@@ -26,18 +27,17 @@ jobs:
             autoconf automake libtool pkg-config \
             zlib1g-dev libncurses5-dev libncursesw5-dev \
             cmake libffi-dev libssl-dev
-       - name: Accept Android SDK licenses
-         run: yes | sdkmanager --licenses
+
       - name: Install Buildozer
         run: |
           python -m pip install --upgrade pip
           pip install buildozer cython
-       
+
       - name: Build APK
         env:
           BUILDOZER_WARN_ON_ROOT: 0
         run: |
-          buildozer android debug
+          yes | buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
