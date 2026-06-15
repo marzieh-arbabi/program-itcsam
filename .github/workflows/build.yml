@@ -44,11 +44,13 @@ jobs:
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
       - name: Install Android packages
-        run: |
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools"
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34"
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
+       run: |
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+            "platform-tools" \
+            "platforms;android-34" \
+            "build-tools;34.0.0"
       - name: Set environment variables
         run: |
           echo "ANDROIDSDK=$HOME/android-sdk" >> $GITHUB_ENV
@@ -70,11 +72,16 @@ jobs:
             cmake \
             libffi-dev \
             libssl-dev
-          
+      - name: Show installed build-tools
+        run: |
+          ls -R $HOME/android-sdk/build-tools    
       - name: Build APK
         env:
+          ANDROIDSDK: ${{ env.ANDROIDSDK }}
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           ANDROIDAPI: 34
           ANDROIDMINAPI: 21
-        run: |
+      run: |
           buildozer android debug
 
