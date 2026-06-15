@@ -89,5 +89,5 @@ jobs:
           ANDROIDAPI: 34
           ANDROIDMINAPI: 21
         run: |
-          buildozer android clean
+
           buildozer -v android debug
