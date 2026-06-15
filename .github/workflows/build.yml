@@ -24,7 +24,6 @@ jobs:
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk
           pip install --upgrade pip
-          pip install --upgrade pip
           pip install buildozer==1.5.0 cython
           pip install python-for-android
 
@@ -36,7 +35,7 @@ jobs:
         run: |
           cd $HOME/android-sdk/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
-          unzip tools.zip
+          unzip -o tools.zip
           mv cmdline-tools latest
 
       - name: Accept Android licenses
@@ -44,13 +43,14 @@ jobs:
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
       - name: Install Android packages
-       run: |
+        run: |
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
             "platform-tools" \
             "platforms;android-34" \
             "build-tools;34.0.0"
+
       - name: Set environment variables
         run: |
           echo "ANDROIDSDK=$HOME/android-sdk" >> $GITHUB_ENV
@@ -58,7 +58,7 @@ jobs:
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
-      
+
       - name: Install build requirements
         run: |
           sudo apt install -y \
@@ -72,9 +72,11 @@ jobs:
             cmake \
             libffi-dev \
             libssl-dev
+
       - name: Show installed build-tools
         run: |
-          ls -R $HOME/android-sdk/build-tools    
+          ls -R $HOME/android-sdk/build-tools
+
       - name: Build APK
         env:
           ANDROIDSDK: ${{ env.ANDROIDSDK }}
@@ -82,6 +84,5 @@ jobs:
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           ANDROIDAPI: 34
           ANDROIDMINAPI: 21
-      run: |
+        run: |
           buildozer android debug
-
