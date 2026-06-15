@@ -2,7 +2,8 @@ name: Android Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -25,32 +26,19 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Setup Android SDK
-        run: |
-          mkdir -p $HOME/android-sdk
-          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "PATH=$PATH:$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools" >> $GITHUB_ENV
-
-      - name: Install Android Command Line Tools
-        run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk/cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
-          unzip tools.zip
-          mv cmdline-tools latest
-
       - name: Accept Android licenses
-        run: |
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+        run: yes | sdkmanager --licenses
 
-      - name: Install required SDK packages
+      - name: Install Android packages
         run: |
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
-            "platform-tools" \
-            "platforms;android-34" \
-            "build-tools;34.0.0"
+          yes | sdkmanager "platform-tools"
+          yes | sdkmanager "platforms;android-34"
+          yes | sdkmanager "build-tools;34.0.0"
 
-      - name: Build APK with Buildozer
+      - name: Build APK
+        env:
+          ANDROIDAPI: 34
+          ANDROIDMINAPI: 21
         run: |
           buildozer android clean
           buildozer android debug
