@@ -14,13 +14,17 @@ requirements = python3,kivy
 orientation = portrait
 fullscreen = 0
 
+
+
 android.api = 34
 android.minapi = 21
-
-android.build_tools_version = 34.0.0
 android.ndk = 25b
-
 android.archs = arm64-v8a
+android.build_tools_version = 34.0.0
+
+android.sdk_path = /home/runner/android-sdk
+android.accept_sdk_license = True
+
 
 [buildozer]
 
