@@ -27,7 +27,6 @@ jobs:
           pip install buildozer==1.5.0
           pip install cython
           pip install "sh<2.0"
-          
 
       - name: Setup Android SDK
         run: |
@@ -89,7 +88,7 @@ jobs:
           ls -R $HOME/android-sdk/build-tools
 
       - name: Verify SDK
-       run: |
+        run: |
           ls -R $HOME/.buildozer/android/platform/android-sdk/tools
           which sdkmanager
 
@@ -101,5 +100,4 @@ jobs:
           ANDROIDAPI: 34
           ANDROIDMINAPI: 21
         run: |
-
           buildozer -v android debug
