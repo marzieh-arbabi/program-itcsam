@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
-      ANDROID_ACCEPT_LICENSES: "true"
+      BUILDOZER_WARN_ON_ROOT: "0"
 
     steps:
       - name: Checkout
@@ -26,18 +26,17 @@ jobs:
             git zip unzip openjdk-17-jdk \
             autoconf automake libtool pkg-config \
             zlib1g-dev libncurses5-dev libncursesw5-dev \
-            cmake libffi-dev libssl-dev
+            cmake libffi-dev libssl-dev python3-pip
 
       - name: Install Buildozer
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           pip install buildozer cython
 
       - name: Build APK
-        env:
-          BUILDOZER_WARN_ON_ROOT: 0
         run: |
-          yes | buildozer android debug
+          buildozer android clean
+          buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
