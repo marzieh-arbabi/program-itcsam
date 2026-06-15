@@ -79,6 +79,11 @@ jobs:
           mkdir -p $HOME/.buildozer/android/platform
           ln -sfn $HOME/android-sdk $HOME/.buildozer/android/platform/android-sdk
 
+          mkdir -p $HOME/.buildozer/android/platform/android-sdk/tools
+          ln -sfn \
+              $HOME/android-sdk/cmdline-tools/latest/bin \
+              $HOME/.buildozer/android/platform/android-sdk/tools/bin
+
       - name: Show installed build-tools
         run: |
           ls -R $HOME/android-sdk/build-tools
