@@ -9,12 +9,14 @@ jobs:
 
     env:
       BUILDOZER_WARN_ON_ROOT: "0"
+      ANDROID_HOME: /home/runner/android-sdk
+      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 🔥 مهم‌ترین fix: Java 17
+      # 🔥 مهم: Java 17 واقعی نصب و فعال شود
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
@@ -30,44 +32,40 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git zip unzip \
+            git zip unzip openjdk-17-jdk \
             autoconf automake libtool pkg-config \
             zlib1g-dev libncurses5-dev libncursesw5-dev \
-            cmake libffi-dev libssl-dev python3-pip
+            cmake libffi-dev libssl-dev \
+            python3-pip wget
 
       - name: Install Buildozer
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          pip install "buildozer==1.5.0" cython==0.29.37 pexpect virtualenv
+          pip install buildozer cython
 
-      # 🔥 Android SDK tools
-      - name: Install Android SDK
+      # 🔥 مهم‌ترین بخش: نصب SDK بدون خطای license
+      - name: Install Android SDK (fixed)
         run: |
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk
 
-          curl -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip tools.zip -d cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O sdk.zip
+          unzip sdk.zip -d cmdline-tools
           mv cmdline-tools/cmdline-tools cmdline-tools/latest
 
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "PATH=$PATH:$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools" >> $GITHUB_ENV
+          export PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$PATH
 
-      # 🔥 قبول license ها
-      - name: Accept licenses
-        run: |
           yes | sdkmanager --licenses || true
 
-      - name: Install SDK packages
-        run: |
           sdkmanager "platform-tools" \
                      "platforms;android-34" \
                      "build-tools;34.0.0" \
                      "ndk;27.0.12077973"
 
-      - name: Clean cache
+      - name: Clean Buildozer cache
         run: |
-          rm -rf .buildozer ~/.buildozer
+          rm -rf .buildozer
+          rm -rf ~/.buildozer
 
       - name: Build APK
         run: |
