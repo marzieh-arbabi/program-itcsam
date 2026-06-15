@@ -10,22 +10,13 @@ source.include_exts = py,png,jpg,kv
 version = 0.1
 
 requirements = python3,kivy
-pip install --upgrade pip
-pip install buildozer==1.5.0 cython
-pip install python-for-android
 
 orientation = portrait
 fullscreen = 0
 
-requirements = python3,kivy
-
 android.api = 34
 android.minapi = 21
 android.ndk = 25b
-android.archs = arm64-v8a
-
-
-
 android.archs = arm64-v8a
 
 [buildozer]
