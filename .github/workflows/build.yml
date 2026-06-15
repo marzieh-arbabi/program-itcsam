@@ -88,6 +88,11 @@ jobs:
         run: |
           ls -R $HOME/android-sdk/build-tools
 
+      - name: Verify SDK
+       run: |
+          ls -R $HOME/.buildozer/android/platform/android-sdk/tools
+          which sdkmanager
+
       - name: Build APK
         env:
           ANDROIDSDK: /home/runner/android-sdk
