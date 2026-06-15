@@ -10,6 +10,9 @@ source.include_exts = py,png,jpg,kv
 version = 0.1
 
 requirements = python3,kivy
+pip install --upgrade pip
+pip install buildozer==1.5.0 cython
+pip install python-for-android
 
 orientation = portrait
 fullscreen = 0
