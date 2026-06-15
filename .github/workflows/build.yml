@@ -25,7 +25,7 @@ jobs:
           sudo apt install -y git zip unzip openjdk-17-jdk
           pip install --upgrade pip
           pip install buildozer==1.5.0 cython
-          pip install python-for-android
+          pip install "python-for-android==2024.01.21"
 
       - name: Setup Android SDK
         run: |
@@ -44,12 +44,11 @@ jobs:
 
       - name: Install Android packages
         run: |
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
             "platform-tools" \
             "platforms;android-34" \
-            "build-tools;34.0.0"
+            "build-tools;34.0.0" \
+            "ndk;25.2.9519653"
 
       - name: Set environment variables
         run: |
@@ -73,16 +72,22 @@ jobs:
             libffi-dev \
             libssl-dev
 
+      - name: Link Buildozer SDK
+        run: |
+          mkdir -p $HOME/.buildozer/android/platform
+          ln -sfn $HOME/android-sdk $HOME/.buildozer/android/platform/android-sdk
+
       - name: Show installed build-tools
         run: |
           ls -R $HOME/android-sdk/build-tools
 
       - name: Build APK
         env:
-          ANDROIDSDK: ${{ env.ANDROIDSDK }}
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+          ANDROIDSDK: /home/runner/android-sdk
+          ANDROID_HOME: /home/runner/android-sdk
+          ANDROID_SDK_ROOT: /home/runner/android-sdk
           ANDROIDAPI: 34
           ANDROIDMINAPI: 21
         run: |
-          buildozer android debug
+          buildozer android clean
+          buildozer -v android debug
